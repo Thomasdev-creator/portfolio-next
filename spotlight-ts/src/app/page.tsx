@@ -7,9 +7,9 @@ import { Card } from '@/components/Card'
 import { Container } from '@/components/Container'
 import {
   GitHubIcon,
+  GmailIcon,
   InstagramIcon,
   LinkedInIcon,
-  XIcon,
 } from '@/components/SocialIcons'
 import logoAirbnb from '@/images/logos/airbnb.svg'
 import logoFacebook from '@/images/logos/facebook.svg'
@@ -286,7 +286,11 @@ export default async function Home() {
             own terms.
           </p>
           <div className="mt-6 flex gap-6">
-            <SocialLink href="#" aria-label="Follow on X" icon={XIcon} />
+            <SocialLink
+              href="https://mail.google.com/"
+              aria-label="Gmail"
+              icon={GmailIcon}
+            />
             <SocialLink
               href="#"
               aria-label="Follow on Instagram"
