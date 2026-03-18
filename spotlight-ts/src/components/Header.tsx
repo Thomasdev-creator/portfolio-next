@@ -45,6 +45,63 @@ function ChevronDownIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
   )
 }
 
+type Language = 'en' | 'fr' | 'es'
+
+const LANGUAGE_OPTIONS: Array<{
+  code: Language
+  label: string
+  short: string
+}> = [
+  { code: 'en', label: 'English', short: 'EN' },
+  { code: 'fr', label: 'Français', short: 'FR' },
+  { code: 'es', label: 'Español', short: 'ES' },
+]
+
+const HEADER_COPY: Record<
+  Language,
+  {
+    menu: string
+    navigation: string
+    closeMenuAriaLabel: string
+    about: string
+    articles: string
+    projects: string
+    speaking: string
+    uses: string
+  }
+> = {
+  en: {
+    menu: 'Menu',
+    navigation: 'Navigation',
+    closeMenuAriaLabel: 'Close menu',
+    about: 'About',
+    articles: 'Blog',
+    projects: 'Projects',
+    speaking: 'Links',
+    uses: 'Skills',
+  },
+  fr: {
+    menu: 'Menu',
+    navigation: 'Navigation',
+    closeMenuAriaLabel: 'Fermer le menu',
+    about: 'À propos',
+    articles: 'Blog',
+    projects: 'Projets',
+    speaking: 'Links',
+    uses: 'Skills',
+  },
+  es: {
+    menu: 'Menú',
+    navigation: 'Navegación',
+    closeMenuAriaLabel: 'Cerrar el menú',
+    about: 'Acerca de',
+    articles: 'Blog',
+    projects: 'Proyectos',
+    speaking: 'Links',
+    uses: 'Skills',
+  },
+}
+
 function SunIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
   return (
     <svg
@@ -94,12 +151,15 @@ function MobileNavItem({
 }
 
 function MobileNavigation(
-  props: React.ComponentPropsWithoutRef<typeof Popover>,
+  props: React.ComponentPropsWithoutRef<typeof Popover> & { language: Language },
 ) {
+  let { language, ...popoverProps } = props
+  let t = HEADER_COPY[language]
+
   return (
-    <Popover {...props}>
+    <Popover {...popoverProps}>
       <PopoverButton className="group flex items-center rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-zinc-800 shadow-lg ring-1 shadow-zinc-800/5 ring-zinc-900/5 backdrop-blur-sm dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10 dark:hover:ring-white/20">
-        Menu
+        {t.menu}
         <ChevronDownIcon className="ml-3 h-auto w-2 stroke-zinc-500 group-hover:stroke-zinc-700 dark:group-hover:stroke-zinc-400" />
       </PopoverButton>
       <PopoverBackdrop
@@ -112,20 +172,20 @@ function MobileNavigation(
         className="fixed inset-x-4 top-8 z-50 origin-top rounded-3xl bg-white p-8 ring-1 ring-zinc-900/5 duration-150 data-closed:scale-95 data-closed:opacity-0 data-enter:ease-out data-leave:ease-in dark:bg-zinc-900 dark:ring-zinc-800"
       >
         <div className="flex flex-row-reverse items-center justify-between">
-          <PopoverButton aria-label="Close menu" className="-m-1 p-1">
+          <PopoverButton aria-label={t.closeMenuAriaLabel} className="-m-1 p-1">
             <CloseIcon className="h-6 w-6 text-zinc-500 dark:text-zinc-400" />
           </PopoverButton>
           <h2 className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-            Navigation
+            {t.navigation}
           </h2>
         </div>
         <nav className="mt-6">
           <ul className="-my-2 divide-y divide-zinc-100 text-base text-zinc-800 dark:divide-zinc-100/5 dark:text-zinc-300">
-            <MobileNavItem href="/about">About</MobileNavItem>
-            <MobileNavItem href="/articles">Articles</MobileNavItem>
-            <MobileNavItem href="/projects">Projects</MobileNavItem>
-            <MobileNavItem href="/speaking">Speaking</MobileNavItem>
-            <MobileNavItem href="/uses">Uses</MobileNavItem>
+            <MobileNavItem href="/about">{t.about}</MobileNavItem>
+            <MobileNavItem href="/blog">{t.articles}</MobileNavItem>
+            <MobileNavItem href="/projects">{t.projects}</MobileNavItem>
+            <MobileNavItem href="/links">{t.speaking}</MobileNavItem>
+            <MobileNavItem href="/skills">{t.uses}</MobileNavItem>
           </ul>
         </nav>
       </PopoverPanel>
@@ -162,17 +222,80 @@ function NavItem({
   )
 }
 
-function DesktopNavigation(props: React.ComponentPropsWithoutRef<'nav'>) {
+function DesktopNavigation(
+  props: React.ComponentPropsWithoutRef<'nav'> & { language: Language },
+) {
+  let { language, ...navProps } = props
+  let t = HEADER_COPY[language]
+
   return (
-    <nav {...props}>
+    <nav {...navProps}>
       <ul className="flex rounded-full bg-white/90 px-3 text-sm font-medium text-zinc-800 shadow-lg ring-1 shadow-zinc-800/5 ring-zinc-900/5 backdrop-blur-sm dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
-        <NavItem href="/about">About</NavItem>
-        <NavItem href="/articles">Articles</NavItem>
-        <NavItem href="/projects">Projects</NavItem>
-        <NavItem href="/speaking">Speaking</NavItem>
-        <NavItem href="/uses">Uses</NavItem>
+        <NavItem href="/about">{t.about}</NavItem>
+        <NavItem href="/blog">{t.articles}</NavItem>
+        <NavItem href="/projects">{t.projects}</NavItem>
+        <NavItem href="/links">{t.speaking}</NavItem>
+        <NavItem href="/skills">{t.uses}</NavItem>
       </ul>
     </nav>
+  )
+}
+
+function LanguageSelector({
+  language,
+  onChange,
+}: {
+  language: Language
+  onChange: (language: Language) => void
+}) {
+  let current = LANGUAGE_OPTIONS.find((opt) => opt.code === language)
+
+  return (
+    <div className="relative">
+      <Popover>
+        {({ close }) => (
+          <>
+            <PopoverButton
+              type="button"
+              className="group inline-flex items-center gap-2 rounded-full bg-white/90 px-3 py-2 text-sm font-medium text-zinc-800 shadow-lg ring-1 shadow-zinc-800/5 ring-zinc-900/5 backdrop-blur-sm transition dark:bg-zinc-800/90 dark:text-white dark:ring-white/10 dark:hover:ring-white/20"
+              aria-label="Language"
+            >
+              {current?.short ?? 'EN'}
+              <ChevronDownIcon className="h-auto w-2 stroke-zinc-500 transition group-hover:stroke-zinc-700 dark:group-hover:stroke-zinc-400" />
+            </PopoverButton>
+            <PopoverPanel
+              transition
+              className="absolute right-0 top-full z-50 mt-2 w-40 origin-top-right overflow-hidden rounded-3xl bg-white p-1 shadow-lg ring-1 ring-zinc-900/5 data-closed:scale-95 data-closed:opacity-0 data-enter:ease-out data-leave:ease-in dark:bg-zinc-900 dark:ring-zinc-800"
+            >
+              <div className="flex flex-col">
+                {LANGUAGE_OPTIONS.map((opt) => {
+                  let selected = opt.code === language
+
+                  return (
+                    <button
+                      key={opt.code}
+                      type="button"
+                      className={clsx(
+                        'rounded-2xl px-3 py-2 text-left text-sm font-medium transition',
+                        selected
+                          ? 'bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100'
+                          : 'text-zinc-700 hover:bg-zinc-100/60 dark:text-zinc-300 dark:hover:bg-zinc-800/60',
+                      )}
+                      onClick={() => {
+                        onChange(opt.code)
+                        close()
+                      }}
+                    >
+                      {opt.label}
+                    </button>
+                  )
+                })}
+              </div>
+            </PopoverPanel>
+          </>
+        )}
+      </Popover>
+    </div>
   )
 }
 
@@ -253,6 +376,29 @@ export function Header() {
   let headerRef = useRef<React.ElementRef<'div'>>(null)
   let avatarRef = useRef<React.ElementRef<'div'>>(null)
   let isInitial = useRef(true)
+
+  let [language, setLanguage] = useState<Language>('en')
+
+  useEffect(() => {
+    try {
+      let saved = window.localStorage.getItem('language')
+      if (saved === 'en' || saved === 'fr' || saved === 'es') {
+        setLanguage(saved)
+      }
+    } catch {
+      // Ignore storage access errors (e.g. privacy mode).
+    }
+  }, [])
+
+  useEffect(() => {
+    document.documentElement.lang = language
+
+    try {
+      window.localStorage.setItem('language', language)
+    } catch {
+      // Ignore storage access errors.
+    }
+  }, [language])
 
   useEffect(() => {
     let downDelay = avatarRef.current?.offsetTop ?? 0
@@ -425,11 +571,21 @@ export function Header() {
                 )}
               </div>
               <div className="flex flex-1 justify-end md:justify-center">
-                <MobileNavigation className="pointer-events-auto md:hidden" />
-                <DesktopNavigation className="pointer-events-auto hidden md:block" />
+                <MobileNavigation
+                  language={language}
+                  className="pointer-events-auto md:hidden"
+                />
+                <DesktopNavigation
+                  language={language}
+                  className="pointer-events-auto hidden md:block"
+                />
               </div>
               <div className="flex justify-end md:flex-1">
-                <div className="pointer-events-auto">
+                <div className="pointer-events-auto flex items-center gap-2">
+                  <LanguageSelector
+                    language={language}
+                    onChange={setLanguage}
+                  />
                   <ThemeToggle />
                 </div>
               </div>
