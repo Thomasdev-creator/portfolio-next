@@ -67,6 +67,7 @@ const HEADER_COPY: Record<
     articles: string
     projects: string
     uses: string
+    links: string
   }
 > = {
   en: {
@@ -77,6 +78,7 @@ const HEADER_COPY: Record<
     articles: 'Blog',
     projects: 'Projects',
     uses: 'Skills',
+    links: 'Links',
   },
   fr: {
     menu: 'Menu',
@@ -86,6 +88,7 @@ const HEADER_COPY: Record<
     articles: 'Blog',
     projects: 'Projets',
     uses: 'Skills',
+    links: 'Liens',
   },
   es: {
     menu: 'Menú',
@@ -95,6 +98,7 @@ const HEADER_COPY: Record<
     articles: 'Blog',
     projects: 'Proyectos',
     uses: 'Skills',
+    links: 'Enlaces',
   },
 }
 
@@ -177,9 +181,10 @@ function MobileNavigation(
         </div>
         <nav className="mt-6">
           <ul className="-my-2 divide-y divide-zinc-100 text-base text-zinc-800 dark:divide-zinc-100/5 dark:text-zinc-300">
-            <MobileNavItem href="/about">{t.about}</MobileNavItem>
-            <MobileNavItem href="/projects">{t.projects}</MobileNavItem>
-            <MobileNavItem href="/skills">{t.uses}</MobileNavItem>
+            <MobileNavItem href="/#about">{t.about}</MobileNavItem>
+            <MobileNavItem href="/#projects">{t.projects}</MobileNavItem>
+            <MobileNavItem href="/#skills">{t.uses}</MobileNavItem>
+            <MobileNavItem href="/#links">{t.links}</MobileNavItem>
           </ul>
         </nav>
       </PopoverPanel>
@@ -194,7 +199,23 @@ function NavItem({
   href: string
   children: React.ReactNode
 }) {
-  let isActive = usePathname() === href
+  let pathname = usePathname()
+  let [hash, setHash] = useState('')
+
+  useEffect(() => {
+    function syncHash() {
+      setHash(typeof window !== 'undefined' ? window.location.hash : '')
+    }
+
+    syncHash()
+    window.addEventListener('hashchange', syncHash)
+    return () => window.removeEventListener('hashchange', syncHash)
+  }, [pathname])
+
+  let isAnchorOnHome = href.startsWith('/#')
+  let isActive = isAnchorOnHome
+    ? pathname === '/' && hash === href.slice(1)
+    : pathname === href
 
   return (
     <li>
@@ -225,9 +246,10 @@ function DesktopNavigation(
   return (
     <nav {...navProps}>
       <ul className="flex rounded-full bg-white/90 px-3 text-sm font-medium text-zinc-800 shadow-lg ring-1 shadow-zinc-800/5 ring-zinc-900/5 backdrop-blur-sm dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
-        <NavItem href="/about">{t.about}</NavItem>
-        <NavItem href="/projects">{t.projects}</NavItem>
-        <NavItem href="/skills">{t.uses}</NavItem>
+        <NavItem href="/#about">{t.about}</NavItem>
+        <NavItem href="/#projects">{t.projects}</NavItem>
+        <NavItem href="/#skills">{t.uses}</NavItem>
+        <NavItem href="/#links">{t.links}</NavItem>
       </ul>
     </nav>
   )
