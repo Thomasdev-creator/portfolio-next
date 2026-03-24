@@ -66,7 +66,6 @@ const HEADER_COPY: Record<
     about: string
     articles: string
     projects: string
-    speaking: string
     uses: string
   }
 > = {
@@ -77,7 +76,6 @@ const HEADER_COPY: Record<
     about: 'About',
     articles: 'Blog',
     projects: 'Projects',
-    speaking: 'Links',
     uses: 'Skills',
   },
   fr: {
@@ -87,7 +85,6 @@ const HEADER_COPY: Record<
     about: 'À propos',
     articles: 'Blog',
     projects: 'Projets',
-    speaking: 'Links',
     uses: 'Skills',
   },
   es: {
@@ -97,7 +94,6 @@ const HEADER_COPY: Record<
     about: 'Acerca de',
     articles: 'Blog',
     projects: 'Proyectos',
-    speaking: 'Links',
     uses: 'Skills',
   },
 }
@@ -182,9 +178,7 @@ function MobileNavigation(
         <nav className="mt-6">
           <ul className="-my-2 divide-y divide-zinc-100 text-base text-zinc-800 dark:divide-zinc-100/5 dark:text-zinc-300">
             <MobileNavItem href="/about">{t.about}</MobileNavItem>
-            <MobileNavItem href="/blog">{t.articles}</MobileNavItem>
             <MobileNavItem href="/projects">{t.projects}</MobileNavItem>
-            <MobileNavItem href="/links">{t.speaking}</MobileNavItem>
             <MobileNavItem href="/skills">{t.uses}</MobileNavItem>
           </ul>
         </nav>
@@ -232,9 +226,7 @@ function DesktopNavigation(
     <nav {...navProps}>
       <ul className="flex rounded-full bg-white/90 px-3 text-sm font-medium text-zinc-800 shadow-lg ring-1 shadow-zinc-800/5 ring-zinc-900/5 backdrop-blur-sm dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
         <NavItem href="/about">{t.about}</NavItem>
-        <NavItem href="/blog">{t.articles}</NavItem>
         <NavItem href="/projects">{t.projects}</NavItem>
-        <NavItem href="/links">{t.speaking}</NavItem>
         <NavItem href="/skills">{t.uses}</NavItem>
       </ul>
     </nav>
